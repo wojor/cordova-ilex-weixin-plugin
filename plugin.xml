@@ -11,6 +11,8 @@
 
   <!-- android -->
   <platform name="android">
+    <preference name="APP_ID" />
+
     <hook type="after_plugin_add" src="scripts/android-install.js" />
     <hook type="after_plugin_install" src="scripts/android-install.js" />
     <hook type="before_plugin_rm" src="scripts/android-install.js" />
@@ -20,6 +22,7 @@
       <feature name="Wechat">
         <param name="android-package" value="com.ilex.plugins.weixin.Wechat" />
       </feature>
+      <preference name="wechatappid" value="$APP_ID" />
     </config-file>
 
     <config-file target="AndroidManifest.xml" parent="/*">
@@ -39,7 +42,7 @@
         <intent-filter>
           <action android:name="android.intent.action.VIEW"/>
           <category android:name="android.intent.category.DEFAULT"/>
-          <data android:scheme="Anything"/>
+          <data android:scheme="$APP_ID"/>
         </intent-filter>
       </activity>
     </config-file>
@@ -53,11 +56,13 @@
 
   <!-- ios -->
   <platform name="ios">
+    <preference name="APP_ID" />
     <config-file target="config.xml" parent="/*">
       <feature name="Wechat">
         <param name="ios-package" value="CDVWxpay"/>
         <param name="onload" value="true" />
       </feature>
+      <preference name="wechatappid" value="$APP_ID" />
     </config-file>
 
     <config-file target="*-Info.plist" parent="CFBundleURLTypes">
@@ -69,7 +74,7 @@
           <string>wechat</string>
           <key>CFBundleURLSchemes</key>
           <array>
-            <string>wxb7092588e08a7e4f</string>
+            <string>$APP_ID</string>
           </array>
         </dict>
       </array>

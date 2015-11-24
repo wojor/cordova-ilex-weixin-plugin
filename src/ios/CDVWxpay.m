@@ -13,6 +13,7 @@
 #pragma mark "API"
 NSString *weixinCallbackId;
 
+NSString* WECHAT_APPID_KEY = @"wechatappid";
 NSString* ERR_WECHAT_NOT_INSTALLED = @"ERR_WECHAT_NOT_INSTALLED";
 NSString* ERR_INVALID_OPTIONS = @"ERR_INVALID_OPTIONS";
 NSString* ERR_UNSUPPORTED_MEDIA_TYPE = @"ERR_UNSUPPORTED_MEDIA_TYPE";
@@ -27,6 +28,12 @@ NSString* NO_RESULT = @"NO_RESULT";
 const int SCENE_CHOSEN_BY_USER = 0;
 const int SCENE_SESSION = 1;
 const int SCENE_TIMELINE = 2;
+
+
+- (void)pluginInitialize {
+    self.wechatAppId = [[self.commandDelegate settings] objectForKey:WECHAT_APPID_KEY];
+    [WXApi registerApp: self.wechatAppId];
+}
 
 - (void)payment:(CDVInvokedUrlCommand *)command
 {
@@ -114,7 +121,7 @@ const int SCENE_TIMELINE = 2;
         req.package = package;
         req.sign = sign;
         
-        [WXApi sendReq:req];
+        //[WXApi sendReq:req];
         //日志输出
         NSLog(@"\nappid=%@\npartid=%@\nprepayid=%@\nnoncestr=%@\ntimestamp=%ld\npackage=%@\nsign=%@",req.openID,req.partnerId,req.prepayId,req.nonceStr,(long)req.timeStamp,req.package,req.sign );
 
@@ -147,19 +154,19 @@ const int SCENE_TIMELINE = 2;
             return ;
         }
         
-        NSString *appid = nil;
+        // NSString *appid = nil;
         
-        // check the params
-        if (![params objectForKey:@"appid"])
-        {
-            [self failWithCallbackID:command.callbackId withMessage:@"appid参数错误"];
-            return ;
-        }
-        appid = [params objectForKey:@"appid"];
+        // // check the params
+        // if (![params objectForKey:@"appid"])
+        // {
+        //     [self failWithCallbackID:command.callbackId withMessage:@"appid参数错误"];
+        //     return ;
+        // }
+        // appid = [params objectForKey:@"appid"];
         
-        self.wechatAppId = appid;
+        // self.wechatAppId = appid;
         
-        [WXApi registerApp:appid];
+        //[WXApi registerApp:appid];
         
         
         weixinCallbackId =command.callbackId;
@@ -183,19 +190,19 @@ const int SCENE_TIMELINE = 2;
     }
     NSString *appid = nil;
     
-    // check the params
-    if (![params objectForKey:@"appid"])
-    {
-        [self failWithCallbackID:command.callbackId withMessage:@"appid参数错误"];
-        return ;
-    }
-    appid = [params objectForKey:@"appid"];
+    // // check the params
+    // if (![params objectForKey:@"appid"])
+    // {
+    //     [self failWithCallbackID:command.callbackId withMessage:@"appid参数错误"];
+    //     return ;
+    // }
+    // appid = [params objectForKey:@"appid"];
     
-    self.wechatAppId = appid;
+    // self.wechatAppId = appid;
     
     
-    // 向微信注册
-    [WXApi registerApp:appid];
+    // // 向微信注册
+    // [WXApi registerApp:appid];
     
     if (![WXApi isWXAppInstalled]) {
         [self failWithCallbackID:command.callbackId withMessage:@"未安装微信"];

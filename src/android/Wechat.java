@@ -8,6 +8,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import org.apache.cordova.CordovaWebView;
+import org.apache.cordova.CordovaInterface;
+
 import com.tencent.mm.sdk.modelpay.PayReq;
 import com.tencent.mm.sdk.openapi.IWXAPI;
 import com.tencent.mm.sdk.openapi.WXAPIFactory;
@@ -34,6 +37,8 @@ import com.tencent.mm.sdk.modelmsg.WXWebpageObject;
  * 
  */
 public class Wechat extends CordovaPlugin {
+
+    public static final String WECHAT_APPID_KEY = "wechatappid";
 
 	public static final String ERROR_WX_NOT_INSTALLED = "Not installed";
 	public static final String ERROR_ARGUMENTS = "Argument Error";
@@ -80,6 +85,13 @@ public class Wechat extends CordovaPlugin {
 	public static CallbackContext currentCallbackContext = null;
 	private String APPID;
 
+
+    @Override
+    public void initialize(CordovaInterface cordova, CordovaWebView webView) {
+        APPID = preferences.getString(WECHAT_APPID_KEY, "");
+        wxAPI = WXAPIFactory.createWXAPI(webView.getContext(), APPID, true);
+        wxAPI.registerApp(APPID);
+    }
 	/**
 	 * 插件主入口
 	 */
@@ -87,7 +99,6 @@ public class Wechat extends CordovaPlugin {
 	public boolean execute(String action, final JSONArray args,
 			CallbackContext callbackContext) throws JSONException {
 		LOG.d(LOG_TAG, "Wechat#execute");
-		APPID = getAPPID(args);
 
 		if ("payment".equalsIgnoreCase(action)) {
 			return sendPay(args, callbackContext);
@@ -193,8 +204,6 @@ public class Wechat extends CordovaPlugin {
 		//////////////////////
 		// 请求微信支付
 		//////////////////////
-		wxAPI = WXAPIFactory.createWXAPI(webView.getContext(), appid, true);
-		wxAPI.registerApp(appid);
 		
 		if (!wxAPI.isWXAppInstalled()) {
 			LOG.e(LOG_TAG, "Wechat is not installed", new IllegalAccessException());
@@ -253,8 +262,6 @@ public class Wechat extends CordovaPlugin {
 	
 	protected boolean sendAuthRequest(JSONArray args, CallbackContext callbackContext) throws JSONException
 	{
-		final IWXAPI api = getWXAPI();
-		api.registerApp(APPID);
 		final SendAuth.Req req = new SendAuth.Req();
 		req.state = "wechat_auth";
 		
@@ -274,7 +281,7 @@ public class Wechat extends CordovaPlugin {
 		{
 			req.scope = "snsapi_userinfo";
 		}
-		api.sendReq(req);
+		wxAPI.sendReq(req);
 		currentCallbackContext = callbackContext;
 		
 		return true;
@@ -282,11 +289,8 @@ public class Wechat extends CordovaPlugin {
 
 	    protected boolean share(JSONArray args, CallbackContext callbackContext)
             throws JSONException, NullPointerException {
-        final IWXAPI api = getWXAPI();
-
-        api.registerApp(APPID);
         // check if installed
-        if (!api.isWXAppInstalled()) {
+        if (!wxAPI.isWXAppInstalled()) {
             callbackContext.error(ERR_WECHAT_NOT_INSTALLED);
             return false;
         }
@@ -406,7 +410,7 @@ public class Wechat extends CordovaPlugin {
         request.message = message;
 
         try {
-            boolean success = api.sendReq(request);
+            boolean success = wxAPI.sendReq(request);
             if (!success) {
                 callbackContext.error(ERR_UNKNOWN);
                 return false;
@@ -421,10 +425,7 @@ public class Wechat extends CordovaPlugin {
     }
 
 	protected boolean isInstalled(CallbackContext callbackContext){
-		final IWXAPI api = getWXAPI();
-		api.registerApp(APPID);
-
-		if (!api.isWXAppInstalled()) {
+		if (!wxAPI.isWXAppInstalled()) {
 			callbackContext.error(ERROR_WX_NOT_INSTALLED);
 			return false;
 		}else{
