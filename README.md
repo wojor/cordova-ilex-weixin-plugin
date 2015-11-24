@@ -1,7 +1,7 @@
 * 2015.11.24 微信支付、登陆、分享 Android及IOS版集成，初步完成
 
 
-# 1. Android客户端安装
+# 1. 插件安装
 开发工程下执行以下命令导入本插件：
 
 	$ ionic plugin add https://github.com/wojor/cordova-ilex-weixin-plugin.git
