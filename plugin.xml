@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  id="com.ilex.plugins.weixin"
+  version="1.0.0">
+  <name>Wechat</name>
+
+  <js-module src="www/wechat.js" name="Wechat">
+    <clobbers target="Wechat" />
+  </js-module>
+
+  <!-- android -->
+  <platform name="android">
+    <hook type="after_plugin_add" src="scripts/android-install.js" />
+    <hook type="after_plugin_install" src="scripts/android-install.js" />
+    <hook type="before_plugin_rm" src="scripts/android-install.js" />
+    <hook type="before_plugin_uninstall" src="scripts/android-install.js" />
+
+    <config-file target="res/xml/config.xml" parent="/*">
+      <feature name="Wechat">
+        <param name="android-package" value="com.ilex.plugins.weixin.Wechat" />
+      </feature>
+    </config-file>
+
+    <config-file target="AndroidManifest.xml" parent="/*">
+      <uses-permission android:name="android.permission.INTERNET" />
+      <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/> 
+      <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/> 
+      <uses-permission android:name="android.permission.READ_PHONE_STATE"/> 
+      <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
+      <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    </config-file>
+
+    <config-file target="AndroidManifest.xml" parent="/manifest/application">
+      <activity
+        android:name=".wxapi.WXEntryActivity"
+        android:exported="true"
+        android:launchMode="singleTop">
+        <intent-filter>
+          <action android:name="android.intent.action.VIEW"/>
+          <category android:name="android.intent.category.DEFAULT"/>
+          <data android:scheme="Anything"/>
+        </intent-filter>
+      </activity>
+    </config-file>
+
+    <source-file src="src/android/Wechat.java" target-dir="src/com/ilex/plugins/weixin" />
+    <source-file src="src/android/AppRegister.java" target-dir="src/com/ilex/plugins/weixin" />
+    <!--<source-file src="src/android/WXPayEntryActivity.java" target-dir="src/com/qdc/plugins/weixin/wxapi" />-->
+    <source-file src="src/android/Constants.java" target-dir="src/com/ilex/plugins/weixin" />
+    <source-file src="libs/android/libammsdk.jar" target-dir="libs" />
+  </platform>
+
+  <!-- ios -->
+  <platform name="ios">
+    <config-file target="config.xml" parent="/*">
+      <feature name="Wechat">
+        <param name="ios-package" value="CDVWxpay"/>
+        <param name="onload" value="true" />
+      </feature>
+    </config-file>
+
+    <config-file target="*-Info.plist" parent="CFBundleURLTypes">
+      <array>
+        <dict>
+          <key>CFBundleTypeRole</key>
+          <string>Editor</string>
+          <key>CFBundleURLName</key>
+          <string>wechat</string>
+          <key>CFBundleURLSchemes</key>
+          <array>
+            <string>wxb7092588e08a7e4f</string>
+          </array>
+        </dict>
+      </array>
+    </config-file>
+
+    <!-- Plugin source code -->
+    <header-file src="src/ios/CDVWxpay.h" />
+    <source-file src="src/ios/CDVWxpay.m" />
+    <header-file src="src/ios/AppDelegate+CDVWxpay.h" />
+    <source-file src="src/ios/AppDelegate+CDVWxpay.m" />
+
+    <!-- Wechat Official -->
+    <header-file src="libs/ios/WXApi.h" />
+    <header-file src="libs/ios/WXApiObject.h" />
+    <source-file src="libs/ios/libWeChatSDK.a" framework="true" />
+
+    <!-- Other required frameworks -->
+    <framework src="libz.dylib" />
+    <framework src="libsqlite3.0.dylib" />
+    <framework src="SystemConfiguration.framework" />
+    <framework src="Security.framework" />
+    <framework src="libstdc++.6.dylib" />
+  </platform>
+
+</plugin>
