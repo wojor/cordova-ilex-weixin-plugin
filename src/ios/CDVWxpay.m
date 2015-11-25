@@ -103,9 +103,6 @@ const int SCENE_TIMELINE = 2;
             return ;
         }
         sign = [params objectForKey:@"sign"];
-
-        // 向微信注册
-        [WXApi registerApp:appid];
         
         if (![WXApi isWXAppInstalled]) {
             [self failWithCallbackID:command.callbackId withMessage:@"未安装微信"];
