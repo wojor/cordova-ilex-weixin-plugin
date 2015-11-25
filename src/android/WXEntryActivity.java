@@ -51,7 +51,7 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler{
                     auth(resp);
                     break;
                  case ConstantsAPI.COMMAND_PAY_BY_WX:
-                    auth(resp);
+                    pay(resp);
                     break;
                  default:
                     Wechat.currentCallbackContext.success();
