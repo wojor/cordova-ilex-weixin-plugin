@@ -4,7 +4,7 @@
 # 1. 插件安装
 开发工程下执行以下命令导入本插件：
 
-	$ ionic plugin add https://github.com/wojor/cordova-ilex-weixin-plugin.git
+	$ ionic plugin add https://github.com/wojor/cordova-ilex-weixin-plugin.git  --variable APP_ID=wxb7092588e08a7e4f
 
 已安装插件查看：
 

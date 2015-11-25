@@ -308,7 +308,7 @@ const int SCENE_TIMELINE = 2;
         }
         
         if (thumbData) {
-            message.thumbData = [self decodeBase64:thumbData];
+            [message setThumbImage:[self getUIImageFromURL:[messageOptions objectForKey:@"thumbData"]]];
         }
         
         request.message = message;
@@ -333,6 +333,35 @@ const int SCENE_TIMELINE = 2;
     }
     
     self.currentCallbackId = command.callbackId;
+}
+
+- (NSData *)getNSDataFromURL:(NSString *)url
+{
+    NSData *data = nil;
+    
+    if ([url hasPrefix:@"http://"] || [url hasPrefix:@"https://"])
+    {
+        data = [NSData dataWithContentsOfURL:[NSURL URLWithString:url]];
+    }
+    else if ([url rangeOfString:@"temp:"].length != 0)
+    {
+        url =  [NSTemporaryDirectory() stringByAppendingPathComponent:[url componentsSeparatedByString:@"temp:"][1]];
+        data = [NSData dataWithContentsOfFile:url];
+    }
+    else
+    {
+        // local file
+        url = [[NSBundle mainBundle] pathForResource:[url stringByDeletingPathExtension] ofType:[url pathExtension]];
+        data = [NSData dataWithContentsOfFile:url];
+    }
+    
+    return data;
+}
+
+- (UIImage *)getUIImageFromURL:(NSString *)url
+{
+    NSData *data = [self getNSDataFromURL:url];
+    return [UIImage imageWithData:data];
 }
 
 
@@ -454,32 +483,6 @@ const int SCENE_TIMELINE = 2;
 
 #pragma mark "Private methods"
 
-- (NSData *)getNSDataFromURL:(NSString *)url
-{
-    NSData *data = nil;
-    
-    if ([url hasPrefix:@"http://"] || [url hasPrefix:@"https://"])
-    {
-        data = [NSData dataWithContentsOfURL:[NSURL URLWithString:url]];
-    }else if([url containsString:@"temp:"]){
-        url =  [NSTemporaryDirectory() stringByAppendingPathComponent:[url componentsSeparatedByString:@"temp:"][1]];
-        data = [NSData dataWithContentsOfFile:url];
-    }
-    else
-    {
-        // local file
-        url = [[NSBundle mainBundle] pathForResource:[url stringByDeletingPathExtension] ofType:[url pathExtension]];
-        data = [NSData dataWithContentsOfFile:url];
-    }
-    
-    return data;
-}
-
-- (UIImage *)getUIImageFromURL:(NSString *)url
-{
-    NSData *data = [self getNSDataFromURL:url];
-    return [UIImage imageWithData:data];
-}
 
 - (void)successWithCallbackID:(NSString *)callbackID
 {

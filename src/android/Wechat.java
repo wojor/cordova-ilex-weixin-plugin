@@ -11,9 +11,6 @@ import org.json.JSONObject;
 import org.apache.cordova.CordovaWebView;
 import org.apache.cordova.CordovaInterface;
 
-import com.tencent.mm.sdk.modelpay.PayReq;
-import com.tencent.mm.sdk.openapi.IWXAPI;
-import com.tencent.mm.sdk.openapi.WXAPIFactory;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -30,6 +27,18 @@ import com.tencent.mm.sdk.modelmsg.WXImageObject;
 import com.tencent.mm.sdk.modelmsg.WXMediaMessage;
 import com.tencent.mm.sdk.modelmsg.WXTextObject;
 import com.tencent.mm.sdk.modelmsg.WXWebpageObject;
+import com.tencent.mm.sdk.modelpay.PayReq;
+import com.tencent.mm.sdk.openapi.IWXAPI;
+import com.tencent.mm.sdk.openapi.WXAPIFactory;
+
+
+import android.os.Environment;
+import android.webkit.URLUtil;
+
+
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
 /**
  * 微信支付插件
  * 
@@ -53,6 +62,8 @@ public class Wechat extends CordovaPlugin {
 	public static final String KEY_ARG_MESSAGE_MEDIA_TYPE = "type";
 	public static final String KEY_ARG_MESSAGE_MEDIA_WEBPAGEURL = "webpageUrl";
 	public static final String KEY_ARG_MESSAGE_MEDIA_TEXT = "text";
+
+    public static final String EXTERNAL_STORAGE_IMAGE_PREFIX = "external://";
 
 	public static final String ERR_WECHAT_NOT_INSTALLED = "ERR_WECHAT_NOT_INSTALLED";
     public static final String ERR_INVALID_OPTIONS = "ERR_INVALID_OPTIONS";
@@ -394,7 +405,12 @@ public class Wechat extends CordovaPlugin {
 
             if (!messageOptions.isNull("thumbData")) {
                 String thumbData = messageOptions.getString("thumbData");
-                message.thumbData = Base64.decode(thumbData, Base64.DEFAULT);
+                // thumbnail
+                Bitmap thumbnail = getBitmap(thumbData);
+                if (thumbnail != null) {
+                    message.setThumbImage(thumbnail);
+                }
+                //message.thumbData = Base64.decode(thumbData, Base64.DEFAULT);
             }
         } else if (text != null) {
             WXTextObject textObject = new WXTextObject();
@@ -422,6 +438,40 @@ public class Wechat extends CordovaPlugin {
 
         currentCallbackContext = callbackContext;
         return true;
+    }
+
+    protected Bitmap getBitmap(String url) {
+        HttpURLConnection conn = null;
+        InputStream is = null;
+        Bitmap bmp = null;
+
+        try {
+
+            if (URLUtil.isHttpUrl(url) || URLUtil.isHttpsUrl(url)) {
+                conn = (HttpURLConnection)new URL(url).openConnection();
+                is = conn.getInputStream();
+            } else {
+                if (url.startsWith(EXTERNAL_STORAGE_IMAGE_PREFIX)) { // external path
+                    url = Environment.getExternalStorageDirectory().getAbsolutePath() + url.substring(EXTERNAL_STORAGE_IMAGE_PREFIX.length());
+                    is = new FileInputStream(url);
+                } else if (!url.startsWith("/")) { // relative path
+                    is = cordova.getActivity().getApplicationContext().getAssets().open(url);
+                } else {
+                    is = new FileInputStream(url);
+                }
+            }
+
+            bmp = BitmapFactory.decodeStream(is);
+            is.close();
+        } catch (Exception e) {
+            bmp = null;
+        } finally {
+            if (conn != null) {
+                conn.disconnect();
+            }
+        }
+
+        return bmp;
     }
 
 	protected boolean isInstalled(CallbackContext callbackContext){
