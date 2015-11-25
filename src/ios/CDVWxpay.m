@@ -103,7 +103,7 @@ const int SCENE_TIMELINE = 2;
             return ;
         }
         sign = [params objectForKey:@"sign"];
-        
+
         if (![WXApi isWXAppInstalled]) {
             [self failWithCallbackID:command.callbackId withMessage:@"未安装微信"];
             return;
@@ -118,7 +118,7 @@ const int SCENE_TIMELINE = 2;
         req.package = package;
         req.sign = sign;
         
-        //[WXApi sendReq:req];
+        [WXApi sendReq:req];
         //日志输出
         NSLog(@"\nappid=%@\npartid=%@\nprepayid=%@\nnoncestr=%@\ntimestamp=%ld\npackage=%@\nsign=%@",req.openID,req.partnerId,req.prepayId,req.nonceStr,(long)req.timeStamp,req.package,req.sign );
 
