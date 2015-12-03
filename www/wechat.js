@@ -2,8 +2,8 @@ var exec = require('cordova/exec');
 
 var Wechat = {
   Scene: {
-        SESSION:  0, // 聊天界面
-        TIMELINE: 1, // 朋友圈
+        SESSION:  0, // 朋友圈
+        TIMELINE: 1, // 聊天界面
         FAVORITE: 2  // 收藏
     },
     Type: {
