@@ -84,8 +84,8 @@ public class Wechat extends CordovaPlugin {
     public static final int SHARE_TYPE_VIDEO = 6;
     public static final int SHARE_TYPE_WEBPAGE = 7;
 
-    public static final int SCENE_SESSION = 0;
-    public static final int SCENE_TIMELINE = 1;
+    public static final int SCENE_SESSION = 1;
+    public static final int SCENE_TIMELINE = 0;
     public static final int SCENE_FAVORITE = 2;
 	
 	public static IWXAPI wxAPI;
