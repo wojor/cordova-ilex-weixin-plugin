@@ -338,7 +338,21 @@ const int SCENE_TIMELINE = 2;
     
     if ([url hasPrefix:@"http://"] || [url hasPrefix:@"https://"])
     {
-        data = [NSData dataWithContentsOfURL:[NSURL URLWithString:url]];
+        NSURL *thumb_url = [NSURL URLWithString:url];
+        
+        NSURLRequest *request =
+        [NSURLRequest requestWithURL:thumb_url
+                         cachePolicy:NSURLRequestReloadIgnoringLocalAndRemoteCacheData
+                     timeoutInterval:2.0];
+        
+        // Send the request and wait for a response
+        NSHTTPURLResponse   *response;
+        NSError             *error;
+        data = [NSURLConnection sendSynchronousRequest:request
+                                             returningResponse:&response
+                                                         error:&error];
+        
+//      data = [NSData dataWithContentsOfURL:thumb_url];
     }
     else if ([url rangeOfString:@"temp:"].length != 0)
     {
