@@ -178,14 +178,12 @@ const int SCENE_TIMELINE = 2;
 }
 
 - (void)isWXAppInstalled:(CDVInvokedUrlCommand*)command {
-    CDVPluginResult* result = nil;
-    
     if (![WXApi isWXAppInstalled]) {
-        [self failWithCallbackID:command.callbackId withMessage:@"未安装微信"];
-        return;
+        [self successWithCallbackID:command.callbackId withMessage:@"false"];
+    } else {
+        [self successWithCallbackID:command.callbackId withMessage:@"true"];
     }
-    result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
-    [self.commandDelegate sendPluginResult:result callbackId:command.callbackId];
+    return ;
 }
 
 - (void)share:(CDVInvokedUrlCommand*)command {
