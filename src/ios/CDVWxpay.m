@@ -177,6 +177,17 @@ const int SCENE_TIMELINE = 2;
         }];
 }
 
+- (void)isWXAppInstalled:(CDVInvokedUrlCommand*)command {
+    CDVPluginResult* result = nil;
+    
+    if (![WXApi isWXAppInstalled]) {
+        [self failWithCallbackID:command.callbackId withMessage:@"未安装微信"];
+        return;
+    }
+    result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
+    [self.commandDelegate sendPluginResult:result callbackId:command.callbackId];
+}
+
 - (void)share:(CDVInvokedUrlCommand*)command {
     CDVPluginResult* result = nil;
     NSDictionary *params = [command.arguments objectAtIndex:0];
