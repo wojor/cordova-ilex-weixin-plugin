@@ -15,3 +15,20 @@
 
 	# 【com.ilex.plugins.weixin】是插件ID，不是插件文件夹名
 	$ionic plugin rm com.ilex.plugins.weixin
+
+
+调用示例
+var params = {
+              'appid': payParams['app_id'],
+              'noncestr': payParams['nonce_str'],
+              'package': payParams['package'],
+              'partnerid': payParams['partner_id'],
+              'prepayid': payParams['prepay_id'],
+              'timestamp': payParams['timestamp'],
+              'sign': payParams['sign']
+            };
+Wechat.payment(params, function () {
+    //success
+  }, function (error) {
+
+  });
