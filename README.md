@@ -19,16 +19,27 @@
 
 调用示例
 var params = {
+
               'appid': payParams['app_id'],
+
               'noncestr': payParams['nonce_str'],
+
               'package': payParams['package'],
+
               'partnerid': payParams['partner_id'],
+
               'prepayid': payParams['prepay_id'],
+
               'timestamp': payParams['timestamp'],
+
               'sign': payParams['sign']
+
             };
-Wechat.payment(params, function () {
+
+Wechat.payment(params, function () { 
+
     //success
+    
   }, function (error) {
 
   });
