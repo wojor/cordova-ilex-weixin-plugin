@@ -17,7 +17,8 @@
 	$ionic plugin rm com.ilex.plugins.weixin
 
 
-调用示例
+调用示例:
+
 var params = {
 
               'appid': payParams['app_id'],
@@ -39,7 +40,7 @@ var params = {
 Wechat.payment(params, function () { 
 
     //success
-    
+
   }, function (error) {
 
   });
