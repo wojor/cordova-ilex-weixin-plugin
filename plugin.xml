@@ -2,7 +2,7 @@
 <plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
   xmlns:android="http://schemas.android.com/apk/res/android"
   id="com.ilex.plugins.weixin"
-  version="1.0.0">
+  version="2.0.0">
   <name>Wechat</name>
 
   <js-module src="www/wechat.js" name="Wechat">
