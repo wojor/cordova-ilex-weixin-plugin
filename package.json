@@ -1,7 +1,7 @@
 {
     "version": "2.0.0",
-    "name": "cordova-ilex-wechat-plugin",
-    "cordova_name": "cordova-ilex-wechat-plugin",
+    "name": "cordova-ilex-weixin-plugin",
+    "cordova_name": "cordova-ilex-weixin-plugin",
     "description": "微信支付移动支付Cordova插件",
     "license": "MIT license",
     "repo": "https://github.com/wojor/cordova-ilex-weixin-plugin",
